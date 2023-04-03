@@ -1,11 +1,37 @@
 # Full-stack skeleton
 
-Skeleton for a full-stack web project
+React and Node.js skeleton for full stack projects. Implements user authorization with jsonwebtoken, example database, example tests, dockerization and CI/CD with GitHub Actions.
 
-## Implemented
+## Run Locally
 
-- User authorization, login and logout
-- Example database and endpoints using Sequelize
-- Example tests for backend
-- Dockerization
-- CI/CD with GitHub Actions
+Clone the project
+
+```bash
+  git clone https://github.com/tommiri/full-stack-skeleton.git
+```
+
+Go to the project directory
+
+```bash
+  cd full-stack-skeleton
+```
+
+Install backend dependencies
+
+```bash
+  cd backend && npm install
+```
+
+Install frontend dependencies
+
+```bash
+  cd ../frontend && npm install
+```
+
+Start up the database container
+
+```bash
+  cd ../ && docker compose up -d
+```
+
+Start developing your app!
