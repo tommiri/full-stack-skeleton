@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { z } from 'zod';
 
 const schema = z.object({
-  PORT: z.string().transform(Number),
+  PORT: z.string().transform(Number).optional(),
   MYSQL_HOST: z.string(),
   MYSQL_USERNAME: z.string(),
   MYSQL_PASSWORD: z.string(),
