@@ -1,14 +1,16 @@
 import { CreationAttributes } from 'sequelize';
 
 import { parseObject, parseString } from './typeParsers';
-import { NewExample } from '../types/example/example';
 import User from '../models/User';
 import { AppError, HttpCode } from '../exceptions/AppError';
+import Example from '../models/Example';
 
 const validationError = new AppError({
   description: 'Incorrect data: a field is missing.',
   httpCode: HttpCode.BAD_REQUEST,
 });
+
+export type NewExample = CreationAttributes<Example>;
 
 export const toNewExample = (param: unknown): NewExample => {
   const object = parseObject(param);
