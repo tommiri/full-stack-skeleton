@@ -12,9 +12,11 @@ export const httpTerminator = createHttpTerminator({ server });
 sequelize
   .sync()
   .then(() => {
-    server.listen(PORT, () => {
-      console.log(`Backend is running on port ${PORT}!`);
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      server.listen(PORT, () => {
+        console.log(`Backend is running on port ${PORT}!`);
+      });
+    }
   })
   .catch((err: unknown) => {
     let errorMsg = 'Something went wrong.';
