@@ -1,16 +1,12 @@
-import { AppError, HttpCode } from '../exceptions/AppError';
 import { NextFunction, Request, Response } from 'express';
+import { AppError, HttpCode } from '../exceptions/AppError';
 
-const unknownEndpoint = (
-  _req: Request,
-  _res: Response,
-  next: NextFunction
-) => {
-  const unknownEndpoint = new AppError({
+const unknownEndpoint = (_req: Request, _res: Response, next: NextFunction) => {
+  const unknownEndpointError = new AppError({
     description: 'Unknown endpoint',
     httpCode: HttpCode.NOT_FOUND,
   });
-  next(unknownEndpoint);
+  next(unknownEndpointError);
 };
 
 export default unknownEndpoint;

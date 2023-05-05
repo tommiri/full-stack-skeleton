@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
 import User from '../models/User';
-import { env } from '../utils/config';
+import env from '../utils/config';
 import { toNewUser, toExistingUser } from '../utils/parseUtils';
 import { AppError, HttpCode } from '../exceptions/AppError';
 
@@ -36,8 +36,7 @@ export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = toExistingUser(req.body);
 
   const authError = new AppError({
-    description:
-      'Invalid username or password, please check your credentials.',
+    description: 'Invalid username or password, please check your credentials.',
     httpCode: HttpCode.UNAUTHORIZED,
   });
 
@@ -46,9 +45,7 @@ export const loginUser = async (req: Request, res: Response) => {
     rejectOnEmpty: authError,
   });
 
-  const isValidPassword = await identifiedUser.isValidPassword(
-    password
-  );
+  const isValidPassword = await identifiedUser.isValidPassword(password);
 
   if (!isValidPassword) {
     throw authError;

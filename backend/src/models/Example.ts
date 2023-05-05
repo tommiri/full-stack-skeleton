@@ -5,6 +5,20 @@ class Example extends Model {}
 
 Example.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      unique: {
+        name: 'ID',
+        msg: 'User ID already exists.',
+      },
+      validate: {
+        isInt: {
+          msg: 'Invalid form for ID, expected integer.',
+        },
+      },
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -40,7 +54,7 @@ Example.init(
     },
   },
   {
-    sequelize: sequelize,
+    sequelize,
     modelName: 'Example',
   }
 );

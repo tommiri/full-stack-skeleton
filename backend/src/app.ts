@@ -1,4 +1,6 @@
+/* eslint-disable import/first */
 require('express-async-errors');
+
 import express from 'express';
 import cors from 'cors';
 import './utils/process';
@@ -10,7 +12,7 @@ import users from './routes/users';
 // Import middleware
 import unknownEndpoint from './middleware/unknownEndpoint';
 import errorParser from './middleware/errorParser';
-import errHandler from './middleware/errHandler';
+import errorHandler from './middleware/errorHandler';
 
 const app = express();
 app.use(cors());
@@ -26,6 +28,6 @@ app.get('/health', (_req, res) => {
 
 app.use(unknownEndpoint);
 app.use(errorParser);
-app.use(errHandler);
+app.use(errorHandler);
 
 export default app;

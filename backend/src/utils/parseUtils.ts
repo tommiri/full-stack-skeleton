@@ -25,16 +25,12 @@ export const toNewExample = (param: unknown): NewExample => {
   throw validationError;
 };
 
-type NewUser = CreationAttributes<User>;
+export type NewUser = CreationAttributes<User>;
 
 export const toNewUser = (param: unknown): NewUser => {
   const object = parseObject(param);
 
-  if (
-    'username' in object &&
-    'email' in object &&
-    'password' in object
-  ) {
+  if ('username' in object && 'email' in object && 'password' in object) {
     const newUser: NewUser = {
       username: parseString(object.username),
       email: parseString(object.email),
@@ -47,7 +43,7 @@ export const toNewUser = (param: unknown): NewUser => {
   throw validationError;
 };
 
-type ExistingUser = Omit<NewUser, 'username'>;
+export type ExistingUser = Omit<NewUser, 'username'>;
 
 export const toExistingUser = (param: unknown): ExistingUser => {
   const object = parseObject(param);

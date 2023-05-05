@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express';
-const router = Router();
-
 import {
   getItems,
   getItemById,
@@ -10,6 +8,8 @@ import {
 } from '../controllers/examples';
 import tokenExtractor from '../middleware/tokenExtractor';
 import userExtractor from '../middleware/userExtractor';
+
+const router = Router();
 
 router.get('/', getItems);
 router.get('/:id', getItemById);

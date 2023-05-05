@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 
 import Example from '../models/Example';
 import { toNewExample } from '../utils/parseUtils';
-import { AppError } from '../exceptions/AppError';
-import { HttpCode } from '../exceptions/AppError';
+import { AppError, HttpCode } from '../exceptions/AppError';
 
 export const getItems = async (req: Request, res: Response) => {
   const items = await Example.findAll({

@@ -15,7 +15,9 @@ type AppErrorArgs = {
 
 export class AppError extends Error {
   public readonly name: string;
+
   public readonly httpCode: HttpCode;
+
   public readonly isOperational: boolean = true;
 
   constructor(args: AppErrorArgs) {

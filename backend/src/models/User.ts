@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
   Model,
   DataTypes,
@@ -10,13 +11,13 @@ import { v4 } from 'uuid';
 
 import sequelize from '../db/sequelize';
 
-class User extends Model<
-  InferAttributes<User>,
-  InferCreationAttributes<User>
-> {
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<string>;
+
   declare username: string;
+
   declare email: string;
+
   declare password: string;
 
   isValidPassword(password: string): Promise<boolean> {
@@ -85,7 +86,7 @@ User.init(
         user.password = await bcrypt.hash(user.password, 12);
       },
     },
-    sequelize: sequelize,
+    sequelize,
     modelName: 'User',
   }
 );
