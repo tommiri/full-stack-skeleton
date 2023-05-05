@@ -19,5 +19,5 @@
     "declaration": true,
     "typeRoots": ["./src/types", "./node_module/@types"]
   },
-  "include": ["src/**/*", "./jest.config.ts"]
+  "include": ["./.eslintrc.js", "./src/**/*", "./jest.config.ts"]
 }
