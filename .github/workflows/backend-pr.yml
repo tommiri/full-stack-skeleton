@@ -46,7 +46,7 @@ jobs:
           MYSQL_USERNAME: root
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: test_db
-          MYSQL_PORT: 3306
+          PORT: 3306
           JWT_KEY: ${{ secrets.JWT_KEY }}
         working-directory: ./backend
         run: npm run test
