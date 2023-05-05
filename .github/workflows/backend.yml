@@ -42,11 +42,11 @@ jobs:
 
       - name: Integration tests
         env:
+          PORT: 3306
           MYSQL_HOST: 127.0.0.1
           MYSQL_USERNAME: root
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: test_db
-          MYSQL_PORT: 3306
           JWT_KEY: ${{ secrets.JWT_KEY }}
         working-directory: ./backend
         run: npm run test
