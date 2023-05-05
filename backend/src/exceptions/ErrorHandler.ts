@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { AppError, HttpCode } from './AppError';
+import { exitHandler } from './ExitHandler';
 
 class ErrorHandler {
   private isTrustedError(err: Error): boolean {
@@ -15,8 +16,8 @@ class ErrorHandler {
   }
 
   // Handle untrusted errors by exiting
-  private handleCriticalError(
-    _err: Error | AppError,
+  private handleUntrustedError(
+    err: Error | AppError,
     res?: Response
   ): void {
     if (res) {
@@ -25,10 +26,9 @@ class ErrorHandler {
         .json({ error: 'Internal server error' });
     }
 
-    console.error(
-      'Application encountered a critical error. Exiting...'
-    );
-    process.exit(1);
+    console.error('Application encountered an untrusted error.');
+    console.error(err);
+    void exitHandler.handleExit(1);
   }
 
   // Check if error is trusted or not and process it accordingly
@@ -36,7 +36,7 @@ class ErrorHandler {
     if (this.isTrustedError(err) && res) {
       this.handleTrustedError(err as AppError, res);
     } else {
-      this.handleCriticalError(err, res);
+      this.handleUntrustedError(err, res);
     }
   }
 }

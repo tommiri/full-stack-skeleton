@@ -45,7 +45,7 @@ User.init(
       allowNull: false,
       unique: {
         name: 'Name',
-        msg: 'Could not create user, user already exists.',
+        msg: 'Could not create user, username already in use.',
       },
       validate: {
         len: {
@@ -59,7 +59,7 @@ User.init(
       allowNull: false,
       unique: {
         name: 'Email',
-        msg: 'Could not create user, user already exists.',
+        msg: 'Could not create user, email already in use.',
       },
       validate: {
         isEmail: {
