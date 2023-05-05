@@ -1,16 +1,12 @@
-import {
-  describe,
-  test,
-  expect,
-  beforeAll,
-  afterAll,
-} from '@jest/globals';
+import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
 import supertest from 'supertest';
+import { Request } from 'express';
 
 import User from '../models/User';
 import Example from '../models/Example';
 import app from '../app';
 import db from '../db/sequelize';
+import { NewUser } from '../utils/parseUtils';
 
 describe('GET examples endpoint', () => {
   test('should return status 200 and valid json', async () => {
@@ -62,7 +58,13 @@ describe('GET item by id endpoint', () => {
   });
 });
 
-let loggedInUser;
+let loggedInUser: Request;
+
+const testUser: NewUser = {
+  username: 'Test User',
+  email: 'test.user@domain.com',
+  password: 'password123',
+};
 
 beforeAll(async () => {
   try {
@@ -81,12 +83,6 @@ beforeAll(async () => {
     console.log(err);
   }
 });
-
-const testUser = {
-  name: 'Test User',
-  email: 'test.user@domain.com',
-  password: 'password123',
-};
 
 describe('POST item endpoint', () => {
   test('should create a new item', async () => {
@@ -121,8 +117,10 @@ describe('POST item endpoint', () => {
       .set('Authorization', `Bearer ${loggedInUser.token}`)
       .send(item);
 
-    expect(response.status).toEqual(403);
-    expect(response.text).toContain('Name is required!');
+    expect(response.status).toEqual(400);
+    expect(response.text).toContain(
+      JSON.stringify({ error: 'Incorrect data: a field is missing.' })
+    );
   });
 
   test('should not allow no description property', async () => {
@@ -137,8 +135,10 @@ describe('POST item endpoint', () => {
       .set('Authorization', `Bearer ${loggedInUser.token}`)
       .send(item);
 
-    expect(response.status).toEqual(403);
-    expect(response.text).toContain('Description is required!');
+    expect(response.status).toEqual(400);
+    expect(response.text).toEqual(
+      JSON.stringify({ error: 'Incorrect data: a field is missing.' })
+    );
   });
 
   test('should not allow empty name', async () => {
@@ -154,7 +154,7 @@ describe('POST item endpoint', () => {
       .set('Authorization', `Bearer ${loggedInUser.token}`)
       .send(item);
 
-    expect(response.status).toEqual(403);
+    expect(response.status).toEqual(400);
     expect(response.text).toContain('Name must not be empty!');
   });
 
@@ -171,7 +171,7 @@ describe('POST item endpoint', () => {
       .set('Authorization', `Bearer ${loggedInUser.token}`)
       .send(item);
 
-    expect(response.status).toEqual(403);
+    expect(response.status).toEqual(400);
     expect(response.text).toContain('Description must not be empty!');
   });
 
@@ -188,10 +188,8 @@ describe('POST item endpoint', () => {
       .set('Authorization', `Bearer ${loggedInUser.token}`)
       .send(item);
 
-    expect(response.status).toEqual(403);
-    expect(response.text).toContain(
-      'Name must be atleast 3 characters long!'
-    );
+    expect(response.status).toEqual(400);
+    expect(response.text).toContain('Name must be atleast 3 characters long!');
   });
 
   test('should not allow too short description', async () => {
@@ -207,7 +205,7 @@ describe('POST item endpoint', () => {
       .set('Authorization', `Bearer ${loggedInUser.token}`)
       .send(item);
 
-    expect(response.status).toEqual(403);
+    expect(response.status).toEqual(400);
     expect(response.text).toContain(
       'Description must be atleast 3 characters long!'
     );
@@ -226,13 +224,15 @@ describe('POST item endpoint', () => {
       .set('Authorization', `Bearer ${loggedInUser.token}`)
       .send(item);
 
-    expect(response.status).toEqual(403);
-    expect(response.text).toContain('Item already exists');
+    expect(response.status).toEqual(400);
+    expect(response.text).toEqual(
+      JSON.stringify({ error: 'Name must be unique!' })
+    );
   });
 
   afterAll(async () => {
     try {
-      return await Example.destroy({
+      await Example.destroy({
         where: { name: 'Test Item', description: 'Test description' },
       });
     } catch (err) {
@@ -275,7 +275,7 @@ describe('DELETE item endpoint', () => {
       .set('Authorization', `Bearer ${loggedInUser.token}`);
 
     expect(response.status).toEqual(404);
-    expect(response.text).toEqual('Not Found');
+    expect(response.text).toEqual(JSON.stringify({ error: 'Item not found!' }));
   });
 });
 
@@ -284,8 +284,8 @@ afterAll(async () => {
     await User.destroy({
       where: { email: 'test.user@domain.com' },
     });
+    await db.close();
   } catch (err) {
     console.log(err);
   }
-  return await db.close();
 });
