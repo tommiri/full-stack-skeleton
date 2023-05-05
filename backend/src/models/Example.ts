@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import db from '../db/db.js';
+import sequelize from '../db/sequelize';
 
 class Example extends Model {}
 
@@ -8,9 +8,7 @@ Example.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: {
-        msg: 'Item already exists!',
-      },
+      unique: 'Item already exists!',
       validate: {
         notNull: {
           msg: 'Name is required!',
@@ -19,8 +17,8 @@ Example.init(
           msg: 'Name must not be empty!',
         },
         len: {
-          args: [3],
           msg: 'Name must be atleast 3 characters long!',
+          args: [3, 300],
         },
       },
     },
@@ -35,14 +33,14 @@ Example.init(
           msg: 'Description must not be empty!',
         },
         len: {
-          args: [3],
           msg: 'Description must be atleast 3 characters long!',
+          args: [3, 300],
         },
       },
     },
   },
   {
-    sequelize: db,
+    sequelize: sequelize,
     modelName: 'Example',
   }
 );

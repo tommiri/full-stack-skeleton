@@ -1,10 +1,25 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from 'sequelize';
 import bcrypt from 'bcryptjs';
+import { v4 } from 'uuid';
 
-import db from '../db/db.js';
+import sequelize from '../db/sequelize';
 
-class User extends Model {
-  isValidPassword(password) {
+class User extends Model<
+  InferAttributes<User>,
+  InferCreationAttributes<User>
+> {
+  declare id: CreationOptional<string>;
+  declare username: string;
+  declare email: string;
+  declare password: string;
+
+  isValidPassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
 }
@@ -13,10 +28,9 @@ User.init(
   {
     id: {
       type: DataTypes.UUIDV4,
-      allowNull: false,
       primaryKey: true,
       unique: {
-        arg: true,
+        name: 'ID',
         msg: 'User ID already exists.',
       },
       validate: {
@@ -26,11 +40,11 @@ User.init(
         },
       },
     },
-    name: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: {
-        arg: true,
+        name: 'Name',
         msg: 'Could not create user, user already exists.',
       },
       validate: {
@@ -44,7 +58,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: {
-        arg: true,
+        name: 'Email',
         msg: 'Could not create user, user already exists.',
       },
       validate: {
@@ -58,8 +72,8 @@ User.init(
       allowNull: false,
       validate: {
         len: {
-          args: [5, 30],
           msg: 'Password must be between 5 and 30 characters long!',
+          args: [5, 30],
         },
       },
     },
@@ -67,10 +81,11 @@ User.init(
   {
     hooks: {
       beforeCreate: async (user) => {
+        user.id = v4();
         user.password = await bcrypt.hash(user.password, 12);
       },
     },
-    sequelize: db,
+    sequelize: sequelize,
     modelName: 'User',
   }
 );

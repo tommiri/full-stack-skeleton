@@ -7,10 +7,10 @@ import {
 } from '@jest/globals';
 import supertest from 'supertest';
 
-import User from '../models/User';
-import Example from '../models/Example';
-import app from '../app.js';
-import db from '../db/db.js';
+import User from '../src/models/User';
+import Example from '../src/models/Example';
+import app from '../src/app';
+import db from '../src/db/db';
 
 describe('GET examples endpoint', () => {
   test('should return status 200 and valid json', async () => {

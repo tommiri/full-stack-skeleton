@@ -1,6 +1,6 @@
 # Full-stack skeleton
 
-React and Node.js skeleton for full stack projects. Implements user authorization with jsonwebtoken, example database, example tests, dockerization and CI/CD with GitHub Actions.
+TypeScript, React and Node.js skeleton for full-stack projects. Implements user authorization with jsonwebtoken, example database, example tests, dockerization and CI/CD with GitHub Actions.
 
 ## Run Locally
 

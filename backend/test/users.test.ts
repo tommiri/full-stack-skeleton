@@ -7,9 +7,9 @@ import {
 } from '@jest/globals';
 import supertest from 'supertest';
 
-import db from '../db/db.js';
-import app from '../app.js';
-import User from '../models/User.js';
+import db from '../src/db/db';
+import app from '../src/app';
+import User from '../src/models/User';
 
 beforeAll(async () => {
   try {
