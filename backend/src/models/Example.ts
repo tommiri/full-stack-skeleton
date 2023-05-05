@@ -1,7 +1,22 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import sequelize from '../db/sequelize';
 
-class Example extends Model {}
+class Example extends Model<
+  InferAttributes<Example>,
+  InferCreationAttributes<Example>
+> {
+  declare id: CreationOptional<string>;
+
+  declare name: string;
+
+  declare description: string;
+}
 
 Example.init(
   {
