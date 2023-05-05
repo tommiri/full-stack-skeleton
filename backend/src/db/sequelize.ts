@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { env } from '../utils/config';
+import env from '../utils/config';
 
 const sequelize = new Sequelize({
   host: env.MYSQL_HOST,

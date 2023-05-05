@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ValidationError } from 'sequelize';
+import { DatabaseError, ValidationError } from 'sequelize';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { AppError, HttpCode } from '../exceptions/AppError';
 
@@ -9,30 +9,35 @@ const errorParser = (
   _res: Response,
   next: NextFunction
 ) => {
+  let error = err;
+
   if (err instanceof ValidationError) {
-    const validationError = new AppError({
+    error = new AppError({
       name: 'ValidationError',
       description: err.errors[0].message,
       httpCode: HttpCode.BAD_REQUEST,
     });
-    next(validationError);
+  } else if (err instanceof DatabaseError) {
+    error = new AppError({
+      name: 'DatabaseError',
+      description: 'Invalid query',
+      httpCode: HttpCode.BAD_REQUEST,
+    });
   } else if (err instanceof TokenExpiredError) {
-    const tokenExpiredError = new AppError({
+    error = new AppError({
       name: 'TokenExpiredError',
       description: 'Token expired',
       httpCode: HttpCode.UNAUTHORIZED,
     });
-    next(tokenExpiredError);
   } else if (err instanceof JsonWebTokenError) {
-    const jsonWebTokenError = new AppError({
+    error = new AppError({
       name: 'JsonWebTokenError',
       description: 'Invalid signature',
       httpCode: HttpCode.UNAUTHORIZED,
     });
-    next(jsonWebTokenError);
-  } else {
-    next(err);
   }
+
+  next(error);
 };
 
 export default errorParser;
