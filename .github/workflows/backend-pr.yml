@@ -42,7 +42,7 @@ jobs:
 
       - name: Integration tests
         env:
-          MYSQL_PORT: 3306
+          PORT: 3306
           MYSQL_HOST: 127.0.0.1
           MYSQL_USERNAME: root
           MYSQL_PASSWORD: password
