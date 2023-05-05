@@ -8,7 +8,7 @@ Example.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: 'Item already exists!',
+      unique: { name: 'Name', msg: 'Name must be unique!' },
       validate: {
         notNull: {
           msg: 'Name is required!',

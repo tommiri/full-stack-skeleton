@@ -7,13 +7,14 @@ import {
 } from '@jest/globals';
 import supertest from 'supertest';
 
-import db from '../src/db/db';
-import app from '../src/app';
-import User from '../src/models/User';
+import db from '../db/sequelize';
+import app from '../app';
+import User from '../models/User';
+import { CreationAttributes } from 'sequelize';
 
 beforeAll(async () => {
   try {
-    return await User.destroy({
+    await User.destroy({
       where: { email: 'test.user@domain.com' },
     });
   } catch (err) {
@@ -26,14 +27,14 @@ afterAll(async () => {
     await User.destroy({
       where: { email: 'test.user@domain.com' },
     });
-    return await db.close();
+    await db.close();
   } catch (err) {
     console.log(err);
   }
 });
 
-const testUser = {
-  name: 'Test User',
+const testUser: CreationAttributes<User> = {
+  username: 'Test User',
   email: 'test.user@domain.com',
   password: 'password123',
 };

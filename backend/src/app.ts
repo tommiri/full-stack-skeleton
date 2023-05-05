@@ -1,13 +1,16 @@
+require('express-async-errors');
 import express from 'express';
 import cors from 'cors';
-import './process';
-require('express-async-errors');
+import './utils/process';
 
 // Import routes
 import examples from './routes/examples';
 import users from './routes/users';
-import errorParser from './middleware/errorParser';
+
+// Import middleware
 import unknownEndpoint from './middleware/unknownEndpoint';
+import errorParser from './middleware/errorParser';
+import errHandler from './middleware/errHandler';
 
 const app = express();
 app.use(cors());
@@ -23,5 +26,6 @@ app.get('/health', (_req, res) => {
 
 app.use(unknownEndpoint);
 app.use(errorParser);
+app.use(errHandler);
 
 export default app;
