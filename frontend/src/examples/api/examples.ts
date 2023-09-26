@@ -1,12 +1,15 @@
+export type Example = {
+  name: string;
+  description: string;
+};
+
 export const getExamples = async () => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/examples`);
   const data = await res.json();
   return data;
 };
 
-type NewExample = {
-  name: string;
-  description: string;
+type NewExample = Example & {
   token: string;
 };
 

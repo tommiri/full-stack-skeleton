@@ -9,6 +9,7 @@ module.exports = {
     'airbnb/hooks',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
     'plugin:prettier/recommended',
   ],
   overrides: [],
@@ -18,9 +19,10 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
-  plugins: ['react', '@typescript-eslint', 'prettier'],
+  plugins: ['react', '@typescript-eslint', '@tanstack/query', 'prettier'],
   rules: {
     'react/react-in-jsx-scope': 0,
     'react/function-component-definition': 0,
+    'no-console': 0,
   },
 };

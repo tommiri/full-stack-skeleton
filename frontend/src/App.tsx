@@ -1,9 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import Authenticate from './users/pages/Authenticate';
 import AuthContext from './shared/context/auth-context';
+import MainNavigation from './shared/navigation/MainNavigation';
+import Examples from './examples/pages/Examples';
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const [token, setToken] = useState('');
@@ -11,7 +16,7 @@ const App = () => {
   const [tokenExpiration, setTokenExpiration] = useState<Date>();
 
   const login = useCallback(
-    (userId: string, userToken: string, expirationDate: Date) => {
+    (userId: string, userToken: string, expirationDate: Date | undefined) => {
       setToken(userToken);
       setUser(userId);
 
@@ -24,7 +29,7 @@ const App = () => {
         JSON.stringify({
           userId,
           token: userToken,
-          expiration,
+          expiration: expiration.toISOString(),
         })
       );
     },
@@ -39,7 +44,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('userData') || '');
+    const storedData = JSON.parse(localStorage.getItem('userData'));
     if (
       storedData &&
       storedData.token &&
@@ -64,36 +69,44 @@ const App = () => {
     }
   }, [token, logout, tokenExpiration]);
 
-  let routes: React.ReactElement;
+  let routes: JSX.Element;
 
   if (token) {
     routes = (
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Examples />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     );
   } else {
     routes = (
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Examples />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/auth" element={<Authenticate />} />
       </Routes>
     );
   }
 
+  const authContextProviderValue = useMemo(
+    () => ({
+      isLoggedIn: !!token,
+      token,
+      userId: user,
+      login,
+      logout,
+    }),
+    [login, logout, user, token]
+  );
+
   return (
-    <AuthContext.Provider
-      // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{
-        isLoggedIn: !!token,
-        token,
-        userId: user,
-        login,
-        logout,
-      }}
-    >
-      <Router>{routes}</Router>
+    <AuthContext.Provider value={authContextProviderValue}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <MainNavigation />
+          <main>{routes}</main>
+        </Router>
+      </QueryClientProvider>
     </AuthContext.Provider>
   );
 };

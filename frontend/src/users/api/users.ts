@@ -1,7 +1,7 @@
 type NewUser = {
-  username: string;
-  email: string;
-  password: string;
+  username?: string;
+  email?: string;
+  password?: string;
 };
 
 export const signUpUser = async ({ username, email, password }: NewUser) => {
